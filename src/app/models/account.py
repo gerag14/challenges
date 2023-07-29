@@ -12,6 +12,7 @@ class Account(BaseModel):
 
     __table_args__ = (
         Index(
+            "idx_account_number",
             "account_number",
         ),
     )

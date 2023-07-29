@@ -3,7 +3,7 @@ from pydantic import BaseSettings, EmailStr
 
 class Settings(BaseSettings):
     # DB
-    SQLALCHEMY_DATABASE_URI: str = "sqlite:///./test.db"
+    SQLALCHEMY_DATABASE_URI: str = "sqlite:///./test.sqlite"
 
     # SMTP
     SMTP_TLS: bool = True
@@ -23,4 +23,4 @@ class Settings(BaseSettings):
     AWS_SECRET_ACCESS_KEY: str
 
 
-settings = Settings()
+settings = Settings()  # noqa

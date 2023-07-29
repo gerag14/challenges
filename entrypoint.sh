@@ -7,7 +7,7 @@ then
     exec alembic revision --autogenerate -m "$msg"
 elif [ "$1" == "migrate" ]
 then
-    exec python manage.py migrate
+    exec alembic upgrade head
 elif [ "$1" == "shell" ]
 then
     exec ipython
@@ -25,7 +25,8 @@ then
     msg="$@"
     exec pytest --cov=app --cov-report=term-missing
 else
-    exec python main.py
+    exec tail -f /dev/null"
+    # exec python main.py
 fi
 
 echo "Fin entrypoint..."

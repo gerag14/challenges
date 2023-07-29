@@ -11,10 +11,10 @@ config = context.config
 
 fileConfig(config.config_file_name)
 
+from app import models  # noqa
+from db.base_model import BaseModel  # noqa
 
-from db.base_model import Base  # noqa
-
-target_metadata = Base.metadata
+target_metadata = BaseModel.metadata
 
 
 def get_url():

@@ -6,11 +6,9 @@ from sqlalchemy.ext.declarative import as_declarative, declared_attr
 
 @as_declarative()
 class BaseModel:
-    id: int = Column(Integer, primary_key=True, index=True)
-    created_date: datetime = Column(DateTime, default=datetime.utcnow)
-    updated_date: datetime = Column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
-    )
+    id = Column(Integer, primary_key=True, index=True)
+    created_date = Column(DateTime, default=datetime.utcnow)
+    updated_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     __name__: str
     # Generate __tablename__ automatically
