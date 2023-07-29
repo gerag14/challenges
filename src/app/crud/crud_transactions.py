@@ -1,9 +1,11 @@
 from typing import List, Optional
 
-from app.crud.base import CRUDBase
+from sqlalchemy.orm import Session
+
 from app.models.Transaction import Transaction
 from app.schemas.Transaction import TransactionCreateSchema, TransactionUpdateSchema
-from sqlalchemy.orm import Session
+
+from .crud_base import CRUDBase
 
 
 class CRUDTransaction(

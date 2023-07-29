@@ -1,10 +1,10 @@
 from sqlalchemy import Column, Index, String
 from sqlalchemy.orm import relationship
 
-from db.base_model import Base
+from db.base_model import BaseModel
 
 
-class Account(Base):
+class Account(BaseModel):
     account_number = Column(String(22), nullable=False)
     account_name = Column(String(150), nullable=False)
     # relationship

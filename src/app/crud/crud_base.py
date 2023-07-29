@@ -1,12 +1,13 @@
 from datetime import datetime
 from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 
-from app.db.postgres.base_class import Base
-from app.db.postgres.session import engine
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy import MetaData, Table, desc, inspect
 from sqlalchemy.orm import Query, Session
+
+from app.db.postgres.base_class import Base
+from app.db.postgres.session import engine
 
 ModelType = TypeVar("ModelType", bound=Base)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)

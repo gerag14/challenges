@@ -1,13 +1,14 @@
 import logging
 
-from app.db.postgres.init_db import init_db
-from app.db.postgres.session import SessionLocal
+from db.init_db import init_db
+from db.session import SessionLocal
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 def init() -> None:
+    logger.info("Connecting..")
     db = SessionLocal()
     init_db(db)
 

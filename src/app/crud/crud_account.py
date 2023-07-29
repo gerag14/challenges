@@ -1,9 +1,11 @@
 from typing import Optional
 
-from app.crud.base import CRUDBase
+from sqlalchemy.orm import Session
+
 from app.models.Account import Account
 from app.schemas.Account import AccountCreateSchema, AccountUpdateSchema
-from sqlalchemy.orm import Session
+
+from .crud_base import CRUDBase
 
 
 class CRUDAccount(CRUDBase[Account, AccountCreateSchema, AccountUpdateSchema]):

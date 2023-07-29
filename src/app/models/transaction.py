@@ -1,11 +1,11 @@
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Index, Numeric
 from sqlalchemy.orm import relationship
 
-from db.base_model import Base
+from db.base_model import BaseModel
 
 
-class Transaction(Base):
-    account_id = Column(ForeignKey("account.id"), nullable=False)
+class Transaction(BaseModel):
+    account_id = Column(ForeignKey("Account.id"), nullable=False)
     amount = Column(Numeric(32, 2), nullable=False)
     transaction_date = Column(DateTime(timezone=False), nullable=False)
     notified = Column(Boolean, default=False)

@@ -5,10 +5,10 @@ from sqlalchemy.ext.declarative import as_declarative, declared_attr
 
 
 @as_declarative()
-class Base:
-    id = Column(Integer, primary_key=True, index=True)
-    created_date = datetime = Column(DateTime, default=datetime.utcnow)
-    updated_date = datetime = Column(
+class BaseModel:
+    id: int = Column(Integer, primary_key=True, index=True)
+    created_date: datetime = Column(DateTime, default=datetime.utcnow)
+    updated_date: datetime = Column(
         DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
     )
 

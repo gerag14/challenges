@@ -1,0 +1,18 @@
+version: "0.1"
+services:
+  stori_challenge:
+    container_name: stori_challenge
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/app
+    env_file:
+      - .env
+    stdin_open: true
+    tty: true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "10"
