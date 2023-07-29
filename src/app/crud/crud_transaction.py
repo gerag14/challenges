@@ -27,5 +27,26 @@ class CRUDTransaction(CRUDBase[Transaction, SchemaTransactionCreate, SchemaTrans
             .all()
         )
 
+    def get_multi_by_account_number_not_notified(
+        self,
+        db: Session,
+        *,
+        account_number: str,
+        offset: Optional[int] = 0,
+        limit: Optional[int] = 100,
+    ) -> List[Transaction]:
+        return (
+            db.query(self.model)
+            .filter_by(notified=False)
+            .join(Transaction.account)
+            .filter_by(
+                account_number=account_number,
+            )
+            .order_by(self.model.created_date.desc())
+            .offset(offset)
+            .limit(limit)
+            .all()
+        )
+
 
 crud_transaction = CRUDTransaction(Transaction)

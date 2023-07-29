@@ -32,6 +32,7 @@ def init_accounts(db: Session) -> None:
                 cypto = SchemaAccountCreate(
                     account_number=row[0],
                     account_name=row[1],
+                    email=row[2],
                 )
                 crud_account.create(db, obj_in=cypto)  # n
 

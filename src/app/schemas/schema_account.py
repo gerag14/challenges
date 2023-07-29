@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 from .schema_transaction import SchemaTransaction
 
@@ -6,6 +6,7 @@ from .schema_transaction import SchemaTransaction
 class SchemaAccountBase(BaseModel):
     account_number: str
     account_name: str
+    email: EmailStr
 
 
 class SchemaAccountCreate(SchemaAccountBase):
