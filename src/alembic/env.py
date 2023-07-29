@@ -18,7 +18,7 @@ target_metadata = BaseModel.metadata
 
 
 def get_url():
-    return os.getenv("SQLALCHEMY_DATABASE_URI", """sqlite:///./test.db""")
+    return os.getenv("SQLALCHEMY_DATABASE_URI", """sqlite:///./db/test.sqlite""")
 
 
 def run_migrations_offline():

@@ -3,7 +3,7 @@ from pydantic import BaseSettings, EmailStr
 
 class Settings(BaseSettings):
     # DB
-    SQLALCHEMY_DATABASE_URI: str = "sqlite:///./test.sqlite"
+    SQLALCHEMY_DATABASE_URI: str = "sqlite:///./db/test.sqlite"
 
     # SMTP
     SMTP_TLS: bool = True
