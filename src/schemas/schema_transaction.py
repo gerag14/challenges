@@ -16,6 +16,7 @@ class SchemaTransactionCreate(SchemaTransactionBase):
 
 class SchemaTransaction(SchemaTransactionBase):
     id: int
+    notified: bool
 
     class Config:
         orm_mode = True

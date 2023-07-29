@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from db.base_model import Base
 
 
-class Account(Base, table=True):
+class Account(Base):
     account_number = Column(String(22), nullable=False)
     account_name = Column(String(150), nullable=False)
     # relationship
