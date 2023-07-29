@@ -2,8 +2,8 @@ from typing import Generator
 
 import pytest
 
-from app.initial_data import main as init_db
 from db.base_model import BaseModel
+from db.init_db import init_db
 from db.session import SessionLocal, engine
 
 

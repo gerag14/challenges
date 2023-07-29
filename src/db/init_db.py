@@ -1,13 +1,20 @@
 import csv
+import logging
 
 from sqlalchemy.orm import Session
 
 from app.crud.crud_account import crud_account
 from app.schemas.schema_account import SchemaAccountCreate
+from db.session import SessionLocal
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
-def init_db(db: Session) -> None:
+def init_db() -> None:
     # initialising the database with some data to challenge
+    logger.info("Connecting..")
+    db = SessionLocal()
     init_accounts(db)
 
 
@@ -27,3 +34,13 @@ def init_accounts(db: Session) -> None:
                     account_name=row[1],
                 )
                 crud_account.create(db, obj_in=cypto)  # n
+
+
+def main() -> None:
+    logger.info("Creating initial data")
+    init_db()
+    logger.info("Initial data created")
+
+
+if __name__ == "__main__":
+    main()
