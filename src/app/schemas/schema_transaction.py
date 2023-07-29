@@ -14,6 +14,11 @@ class SchemaTransactionCreate(SchemaTransactionBase):
     pass
 
 
+class SchemaTransactionUpdate(BaseModel):
+    account_id: int
+    notified: bool
+
+
 class SchemaTransaction(SchemaTransactionBase):
     id: int
     notified: bool

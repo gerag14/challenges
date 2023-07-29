@@ -2,13 +2,13 @@ from typing import Optional
 
 from sqlalchemy.orm import Session
 
-from app.models.Account import Account
-from app.schemas.Account import AccountCreateSchema, AccountUpdateSchema
+from app.models.account import Account
+from app.schemas.schema_account import SchemaAccountCreate, SchemaAccountUpdate
 
 from .crud_base import CRUDBase
 
 
-class CRUDAccount(CRUDBase[Account, AccountCreateSchema, AccountUpdateSchema]):
+class CRUDAccount(CRUDBase[Account, SchemaAccountCreate, SchemaAccountUpdate]):
     def get_by_account_number(
         self, db: Session, *, account_number: str
     ) -> Optional[Account]:
@@ -17,4 +17,4 @@ class CRUDAccount(CRUDBase[Account, AccountCreateSchema, AccountUpdateSchema]):
         )
 
 
-crud_Account = CRUDAccount(Account)
+crud_account = CRUDAccount(Account)

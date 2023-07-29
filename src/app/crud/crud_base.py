@@ -1,15 +1,15 @@
+import json
 from datetime import datetime
 from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 
-from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy import MetaData, Table, desc, inspect
 from sqlalchemy.orm import Query, Session
 
-from app.db.postgres.base_class import Base
-from app.db.postgres.session import engine
+from db.base_model import BaseModel as AppBaseModel
+from db.session import engine
 
-ModelType = TypeVar("ModelType", bound=Base)
+ModelType = TypeVar("ModelType", bound=AppBaseModel)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
 UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 
@@ -87,7 +87,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return query.order_by(desc(getattr(related_model, order_by)))
 
     def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:
-        obj_in_data = jsonable_encoder(obj_in)
+        obj_in_data = obj_in.dict()
         db_obj = self.model(**obj_in_data)  # type: ignore
         db.add(db_obj)
         db.commit()
@@ -102,7 +102,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         obj_in: Union[UpdateSchemaType, Dict[str, Any]],
         updated_by: str,
     ) -> ModelType:
-        obj_data = jsonable_encoder(db_obj)
+        obj_data = db_obj.dict()
         if isinstance(obj_in, dict):
             update_data = obj_in
         else:
@@ -122,7 +122,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
                 .values(
                     obj_id=str(db_obj.id),
                     previous_data=str(obj_data),
-                    current_data=str(jsonable_encoder(db_obj)),
+                    current_data=str(json.dumps(db_obj)),
                     updated_by=updated_by,
                     created_date=datetime.utcnow(),
                     updated_date=datetime.utcnow(),

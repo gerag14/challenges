@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from .transaction import Transaction
+from .schema_transaction import SchemaTransaction
 
 
 class SchemaAccountBase(BaseModel):
@@ -12,9 +12,13 @@ class SchemaAccountCreate(SchemaAccountBase):
     pass
 
 
+class SchemaAccountUpdate(SchemaAccountBase):
+    pass
+
+
 class SchemaAccount(SchemaAccountBase):
     id: int
-    transactions: list[Transaction] = []
+    transactions: list[SchemaTransaction] = []
 
     class Config:
         orm_mode = True
