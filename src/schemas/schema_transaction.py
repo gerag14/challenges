@@ -4,17 +4,17 @@ from decimal import Decimal
 from pydantic import BaseModel
 
 
-class TransactionBase(BaseModel):
+class SchemaTransactionBase(BaseModel):
     account_id: int
     transaction_date: date
     amount: Decimal
 
 
-class TransactionCreate(TransactionBase):
+class SchemaTransactionCreate(SchemaTransactionBase):
     pass
 
 
-class Transaction(TransactionBase):
+class SchemaTransaction(SchemaTransactionBase):
     id: int
 
     class Config:

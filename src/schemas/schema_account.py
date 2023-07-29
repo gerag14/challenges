@@ -3,16 +3,16 @@ from pydantic import BaseModel
 from .transaction import Transaction
 
 
-class AccountBase(BaseModel):
+class SchemaAccountBase(BaseModel):
     account_number: str
     account_name: str
 
 
-class AccountCreate(AccountBase):
+class SchemaAccountCreate(SchemaAccountBase):
     pass
 
 
-class Account(AccountBase):
+class SchemaAccount(SchemaAccountBase):
     id: int
     transactions: list[Transaction] = []
 
