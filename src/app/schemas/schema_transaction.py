@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 class SchemaTransactionBase(BaseModel):
     account_id: int
+    importfile_id: int
     transaction_date: date
     amount: Decimal
 

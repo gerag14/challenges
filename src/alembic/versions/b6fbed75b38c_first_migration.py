@@ -1,8 +1,8 @@
 """first_migration
 
-Revision ID: bf53f17f5529
+Revision ID: b6fbed75b38c
 Revises:
-Create Date: 2023-07-29 11:31:31.658505
+Create Date: 2023-07-29 11:57:59.782451
 
 """
 import sqlalchemy as sa
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = "bf53f17f5529"
+revision = "b6fbed75b38c"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,8 +32,20 @@ def upgrade():
     op.create_index(op.f("ix_account_email"), "account", ["email"], unique=True)
     op.create_index(op.f("ix_account_id"), "account", ["id"], unique=False)
     op.create_table(
+        "importfile",
+        sa.Column("file_name", sa.String(length=100), nullable=False),
+        sa.Column("bucket_name", sa.String(length=50), nullable=False),
+        sa.Column("processed", sa.Boolean(), nullable=True),
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("created_date", sa.DateTime(), nullable=True),
+        sa.Column("updated_date", sa.DateTime(), nullable=True),
+        sa.PrimaryKeyConstraint("id"),
+    )
+    op.create_index(op.f("ix_importfile_id"), "importfile", ["id"], unique=False)
+    op.create_table(
         "transaction",
         sa.Column("account_id", sa.Integer(), nullable=False),
+        sa.Column("importfile_id", sa.Integer(), nullable=False),
         sa.Column("amount", sa.Numeric(precision=32, scale=2), nullable=False),
         sa.Column("transaction_date", sa.DateTime(), nullable=False),
         sa.Column("notified", sa.Boolean(), nullable=True),
@@ -43,6 +55,10 @@ def upgrade():
         sa.ForeignKeyConstraint(
             ["account_id"],
             ["account.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["importfile_id"],
+            ["importfile.id"],
         ),
         sa.PrimaryKeyConstraint("id"),
     )
@@ -56,6 +72,8 @@ def downgrade():
     op.drop_index(op.f("ix_transaction_id"), table_name="transaction")
     op.drop_index("idx_id_account_id", table_name="transaction")
     op.drop_table("transaction")
+    op.drop_index(op.f("ix_importfile_id"), table_name="importfile")
+    op.drop_table("importfile")
     op.drop_index(op.f("ix_account_id"), table_name="account")
     op.drop_index(op.f("ix_account_email"), table_name="account")
     op.drop_index("idx_account_number", table_name="account")
