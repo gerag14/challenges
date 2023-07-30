@@ -5,15 +5,31 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from config import settings
 
-engine = create_engine(settings.SQLALCHEMY_DATABASE_URI, pool_pre_ping=True)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+engine = create_engine(settings.SQLALCHEMY_DATABASE_URI)
+SessionLocal = sessionmaker(autoflush=False, bind=engine)
+
+
+@contextmanager
+def get_db():
+    session = SessionLocal()
+    try:
+        yield session
+    except Exception as error:
+        session.close()
+        raise Exception(error)
+    finally:
+        session.close()
 
 
 @contextmanager
 def atomic_transaction(db: Session):
+    session = db
+    transaction = None
     try:
-        with db.begin():
-            yield
+        transaction = session.begin_nested()
+        yield session
+        transaction.commit()
     except Exception as error:
-        db.rollback()
+        if transaction is not None:
+            transaction.rollback()  # Deshacer los cambios en la base de datos
         raise Exception(error)

@@ -1,13 +1,10 @@
-import json
-from datetime import datetime
-from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
+from typing import Any, Generic, List, Optional, Type, TypeVar
 
 from pydantic import BaseModel
-from sqlalchemy import MetaData, Table, desc, inspect
+from sqlalchemy import desc
 from sqlalchemy.orm import Query, Session
 
 from db.base_model import BaseModel as AppBaseModel
-from db.session import engine
 
 ModelType = TypeVar("ModelType", bound=AppBaseModel)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
@@ -26,19 +23,16 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """
         self.model = model
 
+    @classmethod
+    def validate_update_schema_type(cls, obj_in: Any) -> None:
+        if not isinstance(obj_in, UpdateSchemaType):
+            raise ValueError("obj_in must be an instance of UpdateSchemaType")
+
     def get(self, db: Session, id: Any) -> Optional[ModelType]:
         return db.query(self.model).filter(self.model.id == id).first()
 
-    def get_multi(
-        self, db: Session, *, offset: Optional[int] = 0, limit: Optional[int] = 100
-    ) -> List[ModelType]:
-        return (
-            db.query(self.model)
-            .order_by(self.model.created_date.desc())
-            .offset(offset)
-            .limit(limit)
-            .all()
-        )
+    def get_multi(self, db: Session, *, offset: Optional[int] = 0, limit: Optional[int] = 100) -> List[ModelType]:
+        return db.query(self.model).order_by(self.model.created_date.desc()).offset(offset).limit(limit).all()
 
     def get_query_filter_by(
         self,
@@ -66,9 +60,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
                 query = query.filter(getattr(self.model, attr) == filter_by[attr])
         return query
 
-    def get_query_order_by(
-        self, query: Query, order_by: str, asc: bool = True
-    ) -> Query:
+    def get_query_order_by(self, query: Query, order_by: str, asc: bool = True) -> Query:
         if order_by in self.model.__table__.c.keys():
             if asc:
                 return query.order_by(getattr(self.model, order_by))
@@ -90,7 +82,9 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         obj_in_data = obj_in.dict()
         db_obj = self.model(**obj_in_data)  # type: ignore
         db.add(db_obj)
-        db.commit()
+        db.flush()
+        if db._nested_transaction:
+            db.commit()
         db.refresh(db_obj)
         return db_obj
 
@@ -99,39 +93,20 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         db: Session,
         *,
         db_obj: ModelType,
-        obj_in: Union[UpdateSchemaType, Dict[str, Any]],
-        updated_by: str,
+        obj_in: UpdateSchemaType,
     ) -> ModelType:
-        obj_data = db_obj.dict()
-        if isinstance(obj_in, dict):
-            update_data = obj_in
-        else:
-            update_data = obj_in.dict(exclude_unset=True)
-        for field in obj_data:
-            if field in update_data:
-                setattr(db_obj, field, update_data[field])
+        update_data = obj_in.dict(exclude_unset=True)
+        for field in update_data:
+            setattr(db_obj, field, update_data[field])
         db.add(db_obj)
-        db.commit()
+        db.flush()
+        if db._nested_transaction:
+            db.commit()
         db.refresh(db_obj)
-
-        history_table_name = f"{self.model.__name__.lower()}history"
-        if inspect(engine).has_table(history_table_name):
-            engine.execute(
-                Table(history_table_name, MetaData(bind=engine), autoload=True)
-                .insert()
-                .values(
-                    obj_id=str(db_obj.id),
-                    previous_data=str(obj_data),
-                    current_data=str(json.dumps(db_obj)),
-                    updated_by=updated_by,
-                    created_date=datetime.utcnow(),
-                    updated_date=datetime.utcnow(),
-                )
-            )
         return db_obj
 
     def remove(self, db: Session, *, id: int) -> ModelType:
         obj = db.query(self.model).get(id)
         db.delete(obj)
-        db.commit()
+        db.flush()
         return obj

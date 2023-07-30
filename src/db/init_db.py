@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.crud.crud_account import crud_account
 from app.schemas.schema_account import SchemaAccountCreate
-from db.session import SessionLocal
+from db.session import get_db
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -14,8 +14,8 @@ logger = logging.getLogger(__name__)
 def init_db() -> None:
     # initialising the database with some data to challenge
     logger.info("Connecting..")
-    db = SessionLocal()
-    init_accounts(db)
+    with get_db() as db:
+        init_accounts(db)
 
 
 def init_accounts(db: Session) -> None:

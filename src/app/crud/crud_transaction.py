@@ -9,6 +9,9 @@ from .crud_base import CRUDBase
 
 
 class CRUDTransaction(CRUDBase[Transaction, SchemaTransactionCreate, SchemaTransactionUpdate]):
+    def get_by_transaction_import_id(self, db: Session, *, transaction_import_id: str) -> Optional[Transaction]:
+        return db.query(self.model).filter_by(transaction_import_id=transaction_import_id).first()
+
     def get_multi_by_account_number(
         self,
         db: Session,

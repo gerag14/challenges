@@ -7,6 +7,7 @@ from pydantic import BaseModel
 class SchemaTransactionBase(BaseModel):
     account_id: int
     importfile_id: int
+    transaction_import_id: str
     transaction_date: date
     amount: Decimal
 
@@ -16,7 +17,6 @@ class SchemaTransactionCreate(SchemaTransactionBase):
 
 
 class SchemaTransactionUpdate(BaseModel):
-    account_id: int
     notified: bool
 
 

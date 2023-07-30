@@ -1,8 +1,8 @@
-"""first_migration
+"""first_migrate
 
-Revision ID: b6fbed75b38c
+Revision ID: 1f7403127595
 Revises:
-Create Date: 2023-07-29 11:57:59.782451
+Create Date: 2023-07-30 17:08:54.360540
 
 """
 import sqlalchemy as sa
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = "b6fbed75b38c"
+revision = "1f7403127595"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -46,6 +46,7 @@ def upgrade():
         "transaction",
         sa.Column("account_id", sa.Integer(), nullable=False),
         sa.Column("importfile_id", sa.Integer(), nullable=False),
+        sa.Column("transaction_import_id", sa.String(length=100), nullable=False),
         sa.Column("amount", sa.Numeric(precision=32, scale=2), nullable=False),
         sa.Column("transaction_date", sa.DateTime(), nullable=False),
         sa.Column("notified", sa.Boolean(), nullable=True),
