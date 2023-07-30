@@ -4,6 +4,7 @@ import sys
 from sqlalchemy.orm import Session
 
 from app.core.import_transactions import ImportTransactions
+from app.core.notify_transactions_summary import NotifyTransactionSummary
 from app.core.transactions_summary import TransactionsSummary
 from db.init_db import init_db
 from db.session import get_db
@@ -25,7 +26,7 @@ class ConsolidateSender:
         self._consolidation_data = TransactionsSummary(self._db).create_summary()
 
     def send_emails(self):
-        self._emails = self._consolidation_data
+        self._emails = NotifyTransactionSummary(db=self._db, data=self._consolidation_data).notify()
 
     def send_consolidation_emails(self) -> None:
         logging.info("Import Transactions data from CSV files")

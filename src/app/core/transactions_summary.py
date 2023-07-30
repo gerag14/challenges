@@ -36,6 +36,8 @@ class TransactionsSummary:
         summary = []
         for month in summary_db:
             month_summary = SchemaMonthSummary(
+                account_id=month.account_id,
+                transactions_ids=month.transaction_ids.split(","),
                 balance=month.balance,
                 transactions=month.transactions,
                 average_debit=month.average_debit,
