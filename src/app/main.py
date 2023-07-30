@@ -22,7 +22,7 @@ class ConsolidateSender:
         ImportTransactions(self._db).import_transactions(load_from_boto3=self._boto3)
 
     def load_consolidation_data(self):
-        self._consolidation_data = TransactionsSummary(self._db).load_data()
+        self._consolidation_data = TransactionsSummary(self._db).create_summary()
 
     def send_emails(self):
         self._emails = self._consolidation_data
