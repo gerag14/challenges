@@ -2,13 +2,14 @@ from sqlalchemy.orm import Session
 
 from app.crud.crud_account import crud_account
 from app.schemas.schema_account import SchemaAccount, SchemaAccountCreate
-from app.tests.utils import random_lower_string
+from app.tests.utils import random_email, random_lower_string
 
 
 def create_random_account(db: Session) -> SchemaAccount:
     random_1 = random_lower_string()
     random_2 = random_lower_string()
-    account_in = SchemaAccountCreate(account_name=random_1, account_number=random_2)
+    email = random_email()
+    account_in = SchemaAccountCreate(account_name=random_1, account_number=random_2, email=email)
     account = crud_account.create(db=db, obj_in=account_in)
     return account
 
