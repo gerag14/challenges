@@ -21,3 +21,7 @@ def generate_random_amount(max_value=999999, decimals=2):
     random_integer = random.randint(0, int(max_value * 10**decimals))
     random_amount = random_integer / 10**decimals
     return random_amount
+
+
+def random_email() -> str:
+    return f"{random_lower_string()}@{random_lower_string()}.com"
