@@ -25,7 +25,7 @@ class EmailService:
         # Attach the Stori logo to the email
         with open("static/img/stori_logo.svg", "rb") as logo_file:
             logo_data = logo_file.read()
-            logo_part = MIMEImage(logo_data)
+            logo_part = MIMEImage(logo_data, _subtype="svg+xml")
             logo_part.add_header("Content-ID", "<stori_logo>")
             msg.attach(logo_part)
 
