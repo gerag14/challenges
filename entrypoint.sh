@@ -24,6 +24,16 @@ then
     shift
     msg="$@"
     exec pytest --cov=app --cov-report=term-missing
+elif [ "$1" == "run" ]
+then
+    shift
+    msg="$@"
+    exec python app/main.py
+elif [ "$1" == "run_aws" ]
+then
+    shift
+    msg="$@"
+    exec python app/main.py --aws
 else
     exec tail -f /dev/null
 fi

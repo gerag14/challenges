@@ -43,3 +43,25 @@ The code is implemented in Python. The code uses a Docker image and docker-compo
    ```bash
    docker-compose up -d
    ```
+
+4. Run program
+
+### to run local
+
+```bash
+./execute run
+```
+
+### to run local aws
+
+```bash
+./execute run_aws
+```
+
+## Tests
+
+### To run tests
+
+```bash
+./execute tests
+```
