@@ -14,6 +14,9 @@ class CRUDTransaction(CRUDBase[Transaction, SchemaTransactionCreate, SchemaTrans
     def get_by_transaction_import_id(self, db: Session, *, transaction_import_id: str) -> Optional[Transaction]:
         return db.query(self.model).filter_by(transaction_import_id=transaction_import_id).first()
 
+    def get_by_importfile_id(self, db: Session, *, importfile_id: str) -> Optional[Transaction]:
+        return db.query(self.model).filter_by(importfile_id=importfile_id).all()
+
     def get_multi_by_account_number(
         self,
         db: Session,
@@ -52,8 +55,8 @@ class CRUDTransaction(CRUDBase[Transaction, SchemaTransactionCreate, SchemaTrans
                 Transaction.account_id,
                 func.sum(Transaction.amount).label("balance"),
                 func.count(Transaction.id).label("transactions"),
-                subquery_debit.as_scalar().label("average_debit"),
-                subquery_credit.as_scalar().label("average_credit"),
+                func.coalesce(subquery_debit.as_scalar(), 0).label("average_debit"),
+                func.coalesce(subquery_credit.as_scalar(), 0).label("average_credit"),
                 func.avg(Transaction.amount).label("average_amount"),
                 func.extract("month", Transaction.transaction_date).label("month"),
                 func.extract("year", Transaction.transaction_date).label("year"),

@@ -28,7 +28,8 @@ def atomic_transaction(db: Session):
     try:
         transaction = session.begin_nested()
         yield session
-        transaction.commit()
+        if transaction.is_active:
+            transaction.commit()
     except Exception as error:
         if transaction is not None:
             transaction.rollback()  # Deshacer los cambios en la base de datos

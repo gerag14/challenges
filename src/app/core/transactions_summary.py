@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 
 from app.crud.crud_transaction import crud_transaction
 from app.schemas.schema_summary import SchemaMonthSummary, SchemaSummary
-from app.utils import month_name
+from app.utils import get_month_name
 
 
 class TransactionsSummaryIterator:
@@ -42,7 +42,7 @@ class TransactionsSummary:
                 transactions=month.transactions,
                 average_debit=month.average_debit,
                 average_credit=month.average_credit,
-                month=month_name[month.month],
+                month=get_month_name(month.month),
                 year=str(month.year),
             )
             summary.append(month_summary)

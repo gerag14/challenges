@@ -1,1 +1,1 @@
-from calendar import month_name  # noqa
+from .calendar import get_month_name  # noqa
