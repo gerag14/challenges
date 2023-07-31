@@ -78,5 +78,9 @@ class CRUDTransaction(CRUDBase[Transaction, SchemaTransactionCreate, SchemaTrans
 
         return transaction_summary
 
+    def update_transactions_notified(self, db: Session, *, txn_ids: list[int]):
+        db.query(self.model).filter(self.model.importfile_id.in_(txn_ids)).update({"notified": True})
+        db.commit()
+
 
 crud_transaction = CRUDTransaction(Transaction)
