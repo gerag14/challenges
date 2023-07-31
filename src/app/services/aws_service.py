@@ -8,7 +8,7 @@ class AWSService:
         self.region_name = settings.AWS_REGION_NAME
         self.bucket_name = settings.AWS_BUCKET
 
-    def load_csv_from_s3(self):
+    def import_s3_files(self, path: str):
         s3_client = boto3.client(
             "s3",
             aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
@@ -22,7 +22,7 @@ class AWSService:
             # Obtener la lista de objetos y sus nombres
             objects = response["Contents"]
             for obj in objects:
-                local_file = self.path + obj["Key"]
+                local_file = path + obj["Key"]
                 s3_client.download_file(self.bucket_name, obj["Key"], local_file)
 
     def run_notify_lambda(self):
