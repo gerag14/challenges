@@ -24,7 +24,7 @@ class ImportTransactions:
         self.process_files()
 
     def import_from_s3(self):
-        AWSService().import_s3_files()
+        AWSService().import_s3_files(path=self.path)
 
     def process_files(self):
         """IMPORT TRANSACTIONS FROM LOCAL CSV FILES IN STATIC_ROOT/TRANSACTIONS"""

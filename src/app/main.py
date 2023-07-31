@@ -1,5 +1,5 @@
+import argparse
 import logging
-import sys
 
 from sqlalchemy.orm import Session
 
@@ -15,12 +15,12 @@ class ConsolidateSender:
     _consolidation_data = None
     _emails = None
 
-    def __init__(self, db: Session, load_from_boto3: bool = False):
-        self._boto3 = boto3
+    def __init__(self, db: Session, aws_mode: bool = False):
+        self._aws_mode = aws_mode
         self._db = db
 
     def import_data(self):
-        ImportTransactions(self._db).import_transactions(load_from_boto3=self._boto3)
+        ImportTransactions(self._db).import_transactions(load_from_boto3=self._aws_mode)
 
     def load_consolidation_data(self):
         self._consolidation_data = TransactionsSummary(self._db).create_summary()
@@ -28,7 +28,7 @@ class ConsolidateSender:
     def send_emails(self):
         self._emails = NotifyTransactionSummary(db=self._db, data=self._consolidation_data).notify()
 
-    def send_consolidation_emails(self) -> None:
+    def process(self) -> None:
         logging.info("Import Transactions data from CSV files")
         self.import_data()
 
@@ -39,17 +39,16 @@ class ConsolidateSender:
         self.send_emails()
 
 
-def main(load_from_boto3=False):
+def main(aws_mode=False):
     init_db()
     with get_db() as db:
-        consolidate_sender = ConsolidateSender(db, load_from_boto3=boto3)
-        consolidate_sender.send_consolidation_emails()
+        consolidate_sender = ConsolidateSender(db, aws_mode=aws_mode)
+        consolidate_sender.process()
 
 
 if __name__ == "__main__":
-    boto3 = False
-    if len(sys.argv) > 1:
-        # El primer argumento después del nombre del script (sys.argv[0]) es sys.argv[1]
-        boto3 = sys.argv[1] == "boto3"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--aws", action="store_true", help="run AWS mode")
+    args = parser.parse_args()
 
-    main(load_from_boto3=boto3)
+    main(aws_mode=args.aws)
