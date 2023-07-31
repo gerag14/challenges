@@ -9,8 +9,13 @@ class NotifyTransactionSummary:
     def __init__(self, db: Session, data: SchemaSummary):
         self._db = db
         self._data = data
+        self._emails = []
 
     def notify(self):
+        self.create_emails_content()
+        self.send_email()
+
+    def create_emails_content(self):
         content = ""
         account_id = None
         for account_summary in self._data.months_summary:
@@ -18,13 +23,15 @@ class NotifyTransactionSummary:
                 account_id = account_summary.account_id
                 email = crud_account.get(self._db, account_id).email
                 if content:
-                    self.send_email(content, email)
+                    self._emails.append((content, email))
                 content = ""
             content = self.__create_html_content(account_summary, content)
-        self.send_email(content, email)
+        self._emails.append((content, email))
 
-    def send_email(self, html_content: str, email: str):
-        EmailService().send_email(html_content, email, subject="Consolidated Summary")
+    def send_email(self):
+        service = EmailService()
+        for email in self._data.emails:
+            service.send_email(email[0], email[1], subject="Consolidated Summary")
 
     def __create_html_content(self, summary, html_content):
         if not html_content:

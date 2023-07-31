@@ -7,10 +7,14 @@ from app.tests.tests_crud.test_transactions import create_random_transaction
 from app.utils import get_month_name
 
 
-def tests_load_data_from_csv(db: Session):
+def create_random_summary(db: Session):
     txn = create_random_transaction(db=db)
-
     data_summary = TransactionsSummary(db=db).create_summary()
+    return data_summary, txn
+
+
+def tests_load_data_from_csv(db: Session):
+    data_summary, txn = create_random_summary(db=db)
     assert data_summary
     assert data_summary.months_summary
 
