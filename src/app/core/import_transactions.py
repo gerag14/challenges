@@ -2,7 +2,6 @@ import csv
 import logging
 import os
 
-import boto3
 from sqlalchemy.orm import Session
 
 from app.crud.crud_account import crud_account
@@ -10,7 +9,7 @@ from app.crud.crud_import_file import crud_import_file
 from app.crud.crud_transaction import crud_transaction
 from app.schemas.schema_import_file import SchemaImportFile, SchemaImportFileCreate, SchemaImportFileUpdate
 from app.schemas.schema_transaction import SchemaTransactionCreate
-from config import settings
+from app.services.aws_service import AWSService
 from db.session import atomic_transaction
 
 
@@ -25,25 +24,7 @@ class ImportTransactions:
         self.process_files()
 
     def import_from_s3(self):
-        region_name = settings.AWS_REGION_NAME
-        bucket_name = settings.AWS_BUCKET
-
-        s3_client = boto3.client(
-            "s3",
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-            region_name=region_name,
-        )
-
-        response = s3_client.list_objects_v2(Bucket=bucket_name)
-
-        # Verificar si se obtuvieron objetos
-        if "Contents" in response:
-            # Obtener la lista de objetos y sus nombres
-            objects = response["Contents"]
-            for obj in objects:
-                local_file = self.path + obj["Key"]
-                s3_client.download_file(bucket_name, obj["Key"], local_file)
+        AWSService().import_s3_files()
 
     def process_files(self):
         """IMPORT TRANSACTIONS FROM LOCAL CSV FILES IN STATIC_ROOT/TRANSACTIONS"""
