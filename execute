@@ -4,4 +4,4 @@ set -a
 [ -f .env ] && . .env
 
 # execute a command inside the running container
-docker exec -it stori_challenge ./entrypoint.sh ${@:1}
+docker exec -it stori_challenge /entrypoint.sh ${@:1}

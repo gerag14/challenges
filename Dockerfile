@@ -18,8 +18,7 @@ RUN poetry config virtualenvs.create false
 RUN poetry install
 
 # Run the script
-COPY ./entrypoint.sh /
-RUN ["chmod", "+x", "/entrypoint.sh"]
+ADD entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-ENTRYPOINT ["tail", "-f", "/dev/null"]
-# ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]

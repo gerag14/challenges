@@ -21,13 +21,25 @@ The code is implemented in Python. The code uses a Docker image and docker-compo
 2. Configuration and run setup:
 
    ```bash
-   docker-compose up -d
+   ./setup.sh
    ```
+
+### Change enviroments variables:
+
+- SQLALCHEMY_DATABASE_URI
+- SMTP_TLS
+- SMTP_PORT
+- SMTP_HOST
+- SMTP_USER
+- SMTP_PASSWORD
+- EMAILS_FROM_NAME
+- AWS_ACCESS_KEY_ID
+- AWS_SECRET_ACCESS_KEY
+- AWS_REGION_NAME
+- AWS_BUCKET
 
 3. Run docker compose
 
    ```bash
    docker-compose up -d
    ```
-
-## Configuration

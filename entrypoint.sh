@@ -25,8 +25,7 @@ then
     msg="$@"
     exec pytest --cov=app --cov-report=term-missing
 else
-    exec tail -f /dev/null"
-    # exec python main.py
+    exec tail -f /dev/null
 fi
 
 echo "Fin entrypoint..."
